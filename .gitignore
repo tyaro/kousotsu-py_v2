@@ -133,3 +133,6 @@ mysql/
 
 # redis
 redis/
+
+# for Mac
+.DS_Store
