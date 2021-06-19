@@ -1,6 +1,7 @@
 version: '3'
 services:
 
+  # mariaDB設定
   mariadb:
     restart: always
     image: mariadb:10.5
@@ -43,11 +44,10 @@ services:
       - mariadb
     networks: 
       - default
-    ports: 
-      - "18000:8000"
     tty: true
     volumes:
       - ./python:/root/opt
+      - ./html:/root/html
   
   redis:
     image: "redis:latest"
@@ -62,7 +62,8 @@ services:
     image: "nginx:latest"
     container_name: 'nginx'
     ports:
-      - "10080:80"
+      - "10081:80"
+    tty: true
     volumes:
-      - ./python/public_html:/usr/share/nginx/html
+      - ./html:/usr/share/nginx/html
 

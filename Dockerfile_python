@@ -11,12 +11,14 @@ ENV LC_ALL ja_JP.UTF-8
 ENV TZ JST-9
 ENV TERM xterm
 
+RUN mkdir /root/html
+
 WORKDIR /root/opt
 RUN apt-get install -y vim less
 RUN pip install --upgrade pip
 RUN pip install --upgrade setuptools
-RUN pip install python-binance
 RUN pip install requests
 RUN pip install pandas
 RUN pip install numpy
+RUN pip install SQLAlchemy
 RUN pip install mysql-connector-python
