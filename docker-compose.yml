@@ -1,0 +1,68 @@
+version: '3'
+services:
+
+  mariadb:
+    restart: always
+    image: mariadb:10.5
+    container_name: mariadb_host
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: test_database
+      MYSQL_USER: docker
+      MYSQL_PASSWORD: docker
+      TZ: 'Asia/Tokyo'
+    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    volumes:
+      - ./mysql/data:/var/lib/mysql
+      - ./mysql/my.cnf:/etc/mysql/conf.d/my.cnf
+      - ./mysql/initdb.d:/docker-entrypoint-initdb.d
+    ports:
+      - 13306:3306
+
+  # phpMyAdmin
+  phpmyadmin:
+    restart: always
+    container_name: phpmyadmin
+    image: phpmyadmin/phpmyadmin
+    environment:
+      - PMA_ARBITRARY=1
+      - PMA_HOSTS=mariadb_host
+      - PMA_USER=root
+      - PMA_PASSWORD=root
+    ports:
+      - 8080:80
+      
+  python3:
+    restart: always
+    build: 
+      context: .
+      dockerfile: Dockerfile_python
+    container_name: 'python3'
+    working_dir: '/root/opt'
+    depends_on: 
+      - mariadb
+    networks: 
+      - default
+    ports: 
+      - "18000:8000"
+    tty: true
+    volumes:
+      - ./python:/root/opt
+  
+  redis:
+    image: "redis:latest"
+    container_name: 'redis'
+    ports:
+      - "26379:26379"
+    volumes:
+      - "./redis:/data"
+  
+  nginx:
+    restart: always
+    image: "nginx:latest"
+    container_name: 'nginx'
+    ports:
+      - "10080:80"
+    volumes:
+      - ./python/public_html:/usr/share/nginx/html
+
