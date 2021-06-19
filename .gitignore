@@ -127,3 +127,9 @@ dmypy.json
 
 # Pyre type checker
 .pyre/
+
+# MySQL
+mysql/
+
+# redis
+redis/
