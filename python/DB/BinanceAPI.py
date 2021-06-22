@@ -3,9 +3,6 @@ import pandas as pd
 import numpy as np
 from const import *
 
-
-
-
 # バイナンスAPI
 class BinanceAPI:
     # エンドポイント定義
@@ -16,7 +13,7 @@ class BinanceAPI:
     # pair(str):通貨ペア
     def __init__(self):
         pass
-    
+
     # ローソク足の取得(先物市場)
     # pair(str):通貨ペア
     # num(int):取得する数 MAX1500 データ数が2より大きいで正常判定しているので3以上の値を入れる
@@ -29,7 +26,7 @@ class BinanceAPI:
         # APIサーバから情報を取得
         response = requests.get(BinanceAPI.endPointF + path).json()
         # レスポンスデータをPandasデータフレームに変換
-        df = BinanceAPI.getDataFrame(response)
+        df = BinanceAPI.GetKlinesDataFrame(response)
         return df
 
     # ローソク足の取得(スポット市場)
@@ -44,13 +41,13 @@ class BinanceAPI:
         # APIサーバから情報を取得
         response = requests.get(BinanceAPI.endPointS + path).json()
         # レスポンスデータをPandasデータフレームに変換
-        df = BinanceAPI.getDataFrame(response)
+        df = BinanceAPI.GetKlinesDataFrame(response)
         return df
 
     # ローソク足(KLinesデータ)をPandasのデータフレームに変換
     # レスポンスデータ数2以下を取得エラーと見なす
     @staticmethod
-    def getDataFrame(response):
+    def GetKlinesDataFrame(response):
 
         if not 'msg' in response:
             # とってきたデータには項目名が付いていないので、項目名を追加してpandasのデータフレームに放り込む
@@ -64,17 +61,23 @@ class BinanceAPI:
 
             # UNIX時間とかパッと見わけわからんので UTC+0 基準の時間にしておく
             df.OpenTime = pd.to_datetime(df.OpenTime,unit='ms')   
-            df.CloseTime = pd.to_datetime(df.CloseTime,unit='ms')
+            #df.CloseTime = pd.to_datetime(df.CloseTime,unit='ms')
         else:
             # エラーの場合は空データを返す
-            df = pd.DataFrame(index=range(1),columns=KLINES_COLUMNS).fillna(0)
+            df = pd.DataFrame(index=[],columns=KLINES_COLUMNS)
+
+        df = df.drop(columns=CLOSE_TIME_)
+        df = df.drop(columns=NUMBER_OF_TRADES_)
+        df = df.drop(columns=TAKER_BUY_BASE_ASSET_VOLUME_)
+        df = df.drop(columns=TAKER_BUY_QUOTE_ASSET_VOLUME_)
+        df = df.drop(columns=IGNORE_)
 
         return df
 
     # 先物取引市場で現在値取得
     # pair(str):通貨ペア文字列
     @staticmethod
-    def getTickerF(pair):
+    def GetTickerF(pair):
         # 現在価格取得URLパス
         path = '/fapi/v1/ticker/24hr?symbol=' + pair
         # APIサーバから値を取得
@@ -90,7 +93,7 @@ class BinanceAPI:
     # 現物取引市場で現在値取得
     # pair(str):通貨ペア文字列
     @staticmethod
-    def getTickerS(pair):
+    def GetTickerS(pair):
         # 現在価格取得URLパス
         path = '/api/v3/ticker/price?symbol=' + pair
         # APIサーバから値を取得
@@ -102,3 +105,41 @@ class BinanceAPI:
             value = np.nan
 
         return value
+
+    # 先物板全ての銘柄の現在価格を取得
+    @staticmethod
+    def GetTikcerPriceF():
+        # 現在価格取得URLパス
+        path = '/fapi/v1/ticker/price'
+        # APIサーバから値を取得
+        response = requests.get(BinanceAPI.endPointF + path).json()
+        # データフレームに変換
+        df = BinanceAPI.GetTickersDataFrame(response)
+        # データフレームとして戻す
+        return df
+
+    # 現在価格データをPandasのデータフレームに変換
+    # レスポンスデータにmsgが入っていたらエラーと見なす
+    @staticmethod
+    def GetTickersDataFrame(response):
+
+        if not 'msg' in response:
+            # とってきたデータには項目名が付いていないので、項目名を追加してpandasのデータフレームに放り込む
+            df = pd.DataFrame(data=response,columns=TICKERS_COLUMNS)
+
+            # 小数点位置
+            df[POINT_] = df.price.str.len() - df.price.str.find('.') -1
+
+            # とってきたデータは文字列型なのでfloat型に直しておく
+            df.price = df.price.astype(float) 
+
+            # UNIX時間とかパッと見わけわからんので UTC+0 基準の時間にしておく
+            df.time = pd.to_datetime(df.time,unit='ms')   
+        else:
+            # エラーの場合は空データを返す
+            df = pd.DataFrame(index=range(1),columns=TICKERS_COLUMNS).fillna(0)
+
+        return df
+
+
+BinanceAPI.GetTikcerPriceF()
