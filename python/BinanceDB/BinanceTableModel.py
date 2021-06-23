@@ -75,7 +75,7 @@ class BINANCE_TICKER_INFO_MODEL(Base):
 class BINANCE_SYMBOL_MASTER(Base):
     __tablename__ = 'BINANCE_SYMBOL_MASTER'
     symbol = Column('symbol', String(20),primary_key = True)
-    openPrice = Column('point', Integer)
+    point = Column('point', Integer)
     updatetime = Column('updatetime',DateTime)    
 
 
