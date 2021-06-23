@@ -1,4 +1,6 @@
 #!/bin/bash
 
-python /root/opt/DB/BinanceTableModel.py
-python /root/opt/DB/GetInitialData.py
+python /root/opt/BinanceDB/BinanceTableModel.py
+python /root/opt/BinanceDB/GetInitialData.py
+
+/bin/sh /root/opt/setup-cron.sh

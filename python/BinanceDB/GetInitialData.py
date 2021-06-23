@@ -38,6 +38,7 @@ def main():
     # 通貨ペアマスタテーブルのデータを取得
     df = GetSymbolData()
 
+    #'''
     # 全てのペアについてDBに登録する
     print("先物のローソク足を順次取得してデータベースに格納します")
     for pair in df[SYMBOL_]:
@@ -71,6 +72,7 @@ def main():
         
         # IP BANされないように遅延
         time.sleep(0.5)
+    #'''
 
 
 if __name__ == "__main__":

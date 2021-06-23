@@ -15,6 +15,7 @@ RUN mkdir /root/html
 
 WORKDIR /root/opt
 RUN apt-get install -y vim less
+RUN apt-get install -y rsyslog
 RUN apt-get install -y cron
 
 RUN pip install --upgrade pip
@@ -25,3 +26,4 @@ RUN pip install numpy
 RUN pip install SQLAlchemy
 RUN pip install PyMySQL
 RUN pip install timeout_decorator
+RUN pip install redis

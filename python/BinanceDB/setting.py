@@ -10,6 +10,7 @@ DATABASE = 'mysql+pymysql://%s:%s@%s/%s?charset=utf8' % (
   "mariadb_host",
   "test_database",
 )
+
 ENGINE = create_engine(
   DATABASE,
   encoding = "utf-8",

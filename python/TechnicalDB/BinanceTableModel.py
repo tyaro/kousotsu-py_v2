@@ -64,10 +64,18 @@ class BINANCE_KLINES_1MIN_MODEL(Base):
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
 
+#TICKER モデル
+class BINANCE_TICKER_INFO_MODEL(Base):
+    __tablename__ = 'BINANCE_TICKER_INFO'
+    symbol = Column('symbol', String(20),primary_key=True)
+    tickerTime = Column('tickerTime', DateTime,primary_key=True)
+    price = Column('price', Float)
+
+#通貨ペアマスタ
 class BINANCE_SYMBOL_MASTER(Base):
     __tablename__ = 'BINANCE_SYMBOL_MASTER'
     symbol = Column('symbol', String(20),primary_key = True)
-    openPrice = Column('point', Integer)
+    point = Column('point', Integer)
     updatetime = Column('updatetime',DateTime)    
 
 

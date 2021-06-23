@@ -22,6 +22,16 @@ PRICE_ = 'price'
 POINT_ = 'point'
 TIME_ = 'time'
 
+# TICKERS PRICE DATA
+TICKER_TIME_ = 'tickerTime'
+
+# TICKERS PRICE DATAの項目名
+TICKERS_INFO_COLUMNS = [
+    SYMBOL_,
+    PRICE_,
+    TICKER_TIME_,
+]
+
 # TICKERS PRICE DATAの項目名
 TICKERS_COLUMNS = [
     SYMBOL_,
