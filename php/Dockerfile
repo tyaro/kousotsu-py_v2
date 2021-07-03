@@ -14,4 +14,4 @@ RUN apt-get update \
 
 WORKDIR /var/www/html
 
-RUN composer create-project --prefer-dist laravel/laravel /var/www/html/api
+#RUN composer create-project --prefer-dist laravel/laravel /var/www/html/api
