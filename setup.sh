@@ -25,9 +25,9 @@ echo "Dockerコンテナを作成します。"
 docker-compose build
 docker-compose up -d
 
-sleep 10
+#sleep 10
 
-echo "DB初期データを取得します。"
-docker exec -it python3 /bin/sh -c '/bin/bash /root/opt/setup.sh'
+#echo "DB初期データを取得します。"
+#docker exec -it python3 /bin/sh -c '/bin/bash /root/opt/setup.sh'
 
 
