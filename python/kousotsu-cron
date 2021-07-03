@@ -1,3 +1,6 @@
 */1 * * * * root /usr/local/bin/python /root/opt/BinanceDB/GetTicker.py 
+*/1 * * * * root /usr/local/bin/python /root/opt/BinanceDB/GetTickerSpot.py 
+*/1 * * * * root /usr/local/bin/python /root/opt/TechnicalDB/ChangeRate.py 
+*/1 * * * * root /usr/local/bin/python /root/opt/TechnicalDB/ChangeRateSpot.py 
 */10 * * * * root /usr/local/bin/python /root/opt/BinanceDB/GetKlinesHour.py 
 0,30 * * * * root /usr/local/bin/python /root/opt/BinanceDB/GetKlinesDay.py 
