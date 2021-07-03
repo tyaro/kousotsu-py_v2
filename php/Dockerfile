@@ -13,3 +13,5 @@ RUN apt-get update \
     && docker-php-ext-install pdo_mysql 
 
 WORKDIR /var/www/html
+
+RUN composer 
