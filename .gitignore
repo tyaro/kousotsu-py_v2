@@ -136,3 +136,6 @@ redis/
 
 # for Mac
 .DS_Store
+
+# laravel
+php/src/api/
