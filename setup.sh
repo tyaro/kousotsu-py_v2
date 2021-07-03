@@ -15,8 +15,7 @@ mkdir python
 
 echo "NGINXコンテナ用にディレクトリを作成します"
 echo "Create nginx Directory"
-mkdir php/src
-mkdir php/src/public
+mkdir web
 
 echo "Redisコンテナ用にディレクトリを作成します"
 echo "Create redis Directory"
