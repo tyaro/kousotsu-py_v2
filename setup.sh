@@ -29,10 +29,10 @@ docker-compose up -d
 sleep 10
 docker exec -it php /bin/sh -c 'composer create-project --prefer-dist laravel/laravel /var/www/html/api'
 
+echo "Laravelで動作するAPIアプリケーションのリンクをNGINXにリンクさせます。"
 ln -s ../api/public/ ./web/public/api
 
-#echo "DB初期データを取得します。"
-#docker exec -it python3 /bin/sh -c '/bin/bash /root/opt/setup.sh'
+echo "DB初期データを取得します。"
+docker exec -it python3 /bin/sh -c '/bin/bash /root/opt/setup.sh'
 
 
-#ln -s /var/www/html/api/public /var/www/html/public/api
