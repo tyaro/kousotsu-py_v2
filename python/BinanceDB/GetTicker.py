@@ -12,7 +12,7 @@ def GetTickerF():
     # BUSDや4半期どうちゃらは不要
     df = BinanceAPI.GetTikcerPriceF()
     df = df[~df[SYMBOL_].str.contains('_')]
-    df = df[~df[SYMBOL_].str.contains('BUSD')]
+    df = df[~df[SYMBOL_].str.endswith('BUSD')]
     df = df.sort_values(SYMBOL_)
     TickerInfo2db(df,'BINANCE_TICKER_INFO')
     DeleteTickerInfo('BINANCE_TICKER_INFO')

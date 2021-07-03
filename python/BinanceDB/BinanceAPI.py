@@ -2,6 +2,7 @@ import requests
 import pandas as pd
 import numpy as np
 from const import *
+import datetime
 
 # バイナンスAPI
 class BinanceAPI:
@@ -141,5 +142,37 @@ class BinanceAPI:
 
         return df
 
+   # 先物板全ての銘柄の現在価格を取得
+    @staticmethod
+    def GetTikcerPriceS():
+        # 現在価格取得URLパス
+        path = '/api/v3/ticker/price'
+        # APIサーバから値を取得
+        response = requests.get(BinanceAPI.endPointS + path).json()
+        # データフレームに変換
+        df = BinanceAPI.GetTickersSpotDataFrame(response)
+        # データフレームとして戻す
+        return df
 
-BinanceAPI.GetTikcerPriceF()
+    # 現在価格データをPandasのデータフレームに変換
+    # レスポンスデータにmsgが入っていたらエラーと見なす
+    @staticmethod
+    def GetTickersSpotDataFrame(response):
+
+        if not 'msg' in response:
+            # とってきたデータには項目名が付いていないので、項目名を追加してpandasのデータフレームに放り込む
+            df = pd.DataFrame(data=response,columns=TICKERS_COLUMNS)
+
+            # 小数点位置
+            df[POINT_] = df.price.str.len() - df.price.str.find('.') -1
+
+            # とってきたデータは文字列型なのでfloat型に直しておく
+            df.price = df.price.astype(float) 
+
+            # UNIX時間とかパッと見わけわからんので UTC+0 基準の時間にしておく
+            df.time = pd.to_datetime((datetime.datetime.now()+datetime.timedelta(hours=-9)).strftime('%Y-%m-%d %H:%M:%S'))
+        else:
+            # エラーの場合は空データを返す
+            df = pd.DataFrame(index=range(1),columns=TICKERS_COLUMNS).fillna(0)
+
+        return df
