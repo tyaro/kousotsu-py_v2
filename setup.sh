@@ -15,7 +15,8 @@ mkdir python
 
 echo "NGINXコンテナ用にディレクトリを作成します"
 echo "Create nginx Directory"
-mkdir html
+mkdir php/src
+mkdir php/src/public
 
 echo "Redisコンテナ用にディレクトリを作成します"
 echo "Create redis Directory"
@@ -31,3 +32,4 @@ docker-compose up -d
 #docker exec -it python3 /bin/sh -c '/bin/bash /root/opt/setup.sh'
 
 
+#ln -s /var/www/html/api/public /var/www/html/public/api

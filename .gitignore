@@ -138,4 +138,4 @@ redis/
 .DS_Store
 
 # laravel
-php/src/api/
+php/web/api/
