@@ -4,3 +4,4 @@
 */1 * * * * root /usr/local/bin/python /root/opt/TechnicalDB/ChangeRateSpot.py 
 */10 * * * * root /usr/local/bin/python /root/opt/BinanceDB/GetKlinesHour.py 
 0,30 * * * * root /usr/local/bin/python /root/opt/BinanceDB/GetKlinesDay.py 
+10 9 * * * root /usr/local/bin/python /root/opt/TechnicalDB/HighSchool.py

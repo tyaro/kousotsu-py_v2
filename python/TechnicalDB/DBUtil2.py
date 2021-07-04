@@ -1,78 +1,78 @@
-
 from setting import session
 from BinanceTableModel import *
 from const import *
 import pandas as pd
 import datetime
-import redis
-import json
 
-def GetChangeRate(tablename):
+# ローソク足データをDBから取得
+def GetKlinesData(tablename,pair,span):
 
-    #定義
-    PRICE_005MIN_AGO = 'Price005minAgo'
-    PRICE_010MIN_AGO = 'Price010minAgo'
-    PRICE_030MIN_AGO = 'Price030minAgo'
-    PRICE_060MIN_AGO = 'Price060minAgo'
-    PRICE_120MIN_AGO = 'Price120minAgo'
+    query = 'select symbol,openTime,open,close,high,low from %s where symbol = "%s" order by openTime desc limit %s'
 
-    CHANGE_RATE_005 = 'ChangeRate5'
-    CHANGE_RATE_010 = 'ChangeRate10'
-    CHANGE_RATE_030 = 'ChangeRate30'
-    CHANGE_RATE_060 = 'ChangeRate60'
-    CHANGE_RATE_120 = 'ChangeRate120'
+    query1 = query % (tablename,pair,span)
+    
+    df = pd.read_sql_query(query1,con=ENGINE)
+    df = df.rename(columns={'openTime':OPEN_TIME_,'open':OPEN_,'close':CLOSE_,'high':HIGH_,'low':LOW_})
+    df = df.iloc[::-1]
+    return df
 
+def GetTicker(tablename,pair):
+    query = 'select price from %s where symbol = "%s" order by tickerTime desc limit 1'
+    query1 = query % (tablename,pair)
+    df = pd.read_sql_query(query1,con=ENGINE)
+    value = df.iloc[0][PRICE_]
+    return value
 
-    print("変動率を計算します")
-    # シンボルリストをDBから取得
-    symbolList = session.query(BINANCE_SYMBOL_MASTER.symbol,BINANCE_SYMBOL_MASTER.point)
+def KousotsuMethod2db(calcList,tablename):
 
-    # 変動率のリストを作成
-    changeRateList = []
-    # 全銘柄(5分/10分/30分/120分の変動率を計算)
-    for symbol in symbolList:
-        pair = symbol[0]
-        point = symbol[1]
+    if not calcList:
+        return
+    
+    query = 'INSERT INTO %s \
+            (pair,calctime,kousotsuPrice1,kousotsuPrice2,kousotsuPrice3,EntryPointLong,EntryPointShort) \
+            VALUES("%s","%s",%s,%s,%s,%s,%s) \
+            ON DUPLICATE KEY UPDATE \
+            kousotsuPrice1=%s,kousotsuPrice2=%s,kousotsuPrice3=%s,EntryPointLong=%s,EntryPointShort=%s'
 
-        query = 'select * from %s where symbol = "%s" order by tickerTime desc limit 120'
-        query1 = query % (tablename,pair)
-        df = pd.read_sql_query(con=ENGINE,sql=query1)
-        df[PRICE_005MIN_AGO] = df[PRICE_].shift(-5)
-        df[PRICE_010MIN_AGO] = df[PRICE_].shift(-10)
-        df[PRICE_030MIN_AGO] = df[PRICE_].shift(-30)
-        df[PRICE_060MIN_AGO] = df[PRICE_].shift(-60)
-        df[PRICE_120MIN_AGO] = df[PRICE_].shift(-120)
+    for row in calcList:
+        for k in row.keys():
+            query1 = query % (
+                tablename,
+                row['pair'],
+                row[CALC_TIME_],
+                row[KOUSOTSU_PRICE_1_],
+                row[KOUSOTSU_PRICE_2_],
+                row[KOUSOTSU_PRICE_3_],
+                row[LONG_ENTRY_POINT_],
+                row[SHORT_ENTRY_POINT_],
+                row[KOUSOTSU_PRICE_1_],
+                row[KOUSOTSU_PRICE_2_],
+                row[KOUSOTSU_PRICE_3_],
+                row[LONG_ENTRY_POINT_],
+                row[SHORT_ENTRY_POINT_])
 
-        df[CHANGE_RATE_005] = df[PRICE_]/df[PRICE_005MIN_AGO]*100-100
-        df[CHANGE_RATE_010] = df[PRICE_]/df[PRICE_010MIN_AGO]*100-100
-        df[CHANGE_RATE_030] = df[PRICE_]/df[PRICE_030MIN_AGO]*100-100
-        df[CHANGE_RATE_060] = df[PRICE_]/df[PRICE_060MIN_AGO]*100-100
-        df[CHANGE_RATE_120] = df[PRICE_]/df[PRICE_120MIN_AGO]*100-100
+            ENGINE.execute(query1)
+    
+    return
 
-        df[TICKER_TIME_] = df[TICKER_TIME_].astype(str)
-
-        data = {
-                "pair": pair,
-                "5min": round(df.iloc[0][CHANGE_RATE_005],2),
-                "10min":round(df.iloc[0][CHANGE_RATE_010],2),
-                "30min":round(df.iloc[0][CHANGE_RATE_030],2),
-                "60min":round(df.iloc[0][CHANGE_RATE_060],2),
-                "120min":round(df.iloc[0][CHANGE_RATE_120],2),
-                'calcTime':df.iloc[0][TICKER_TIME_],
-        }
-        changeRateList.append(data)
-
-    return json.dumps(changeRateList)
+def GetViewData(viewName):
+    query = 'select * from %s'
+    query1 = query % (viewName)
+    
+    df = pd.read_sql_query(query1,con=ENGINE)
+    return df
 
 
 
 def main():
-    client = redis.Redis(host='redis',port=6379,db=0)
-
-    key = 'ChangeRate'
-    value = GetChangeRate('BINANCE_TICKER_INFO')
-    #client.set('hoge','piyo')
-    client.set(key,value)
+    '''
+    df = GetKlinesData('BINANCE_KLINES_1DAY','BTCUSDT',20)
+    value = GetTicker('BINANCE_TICKER_INFO','BTCUSDT')
+    '''
+    df1 = GetViewData('VIEW_KOUSOTSU_METHOD')
+    df2 = GetViewData('VIEW_TICKER_INFO')
+    df = pd.merge(df1,df2,left_on='pair',right_on='symbol')
+    print(df)
 
 if __name__ == "__main__":
     main()

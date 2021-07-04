@@ -33,3 +33,10 @@ def readChangeRateSpot():
     data = client.get('ChangeRateSpot')
     j = json.loads(data)
     return j
+
+@app.get("/kousotsutan")
+def readChangeRateSpot():
+    client = redis.Redis(host='redis', port=6379, db=0)
+    data = client.get('kousotsutan')
+    j = json.loads(data)
+    return j

@@ -55,3 +55,34 @@ KLINES_COLUMNS = [
     TAKER_BUY_QUOTE_ASSET_VOLUME_,
     IGNORE_
     ]
+
+# 高卒たんメソッド
+PRICE_CHANGE_ = 'PriceChange'
+GAIN_VALUE_ = 'GainValue'
+PRE_GAIN_VALUE_ = 'PreGainValue'
+PRE_HIGH_ = 'PreHigh'
+PRE_LOW_ = 'PreLow'
+PRE_OPEN_ = 'PreOpen'
+PRE_CLOSE_ = 'PreClose'
+KOUSOTSU_PRICE_0_ = 'kousotsuPrice0'
+KOUSOTSU_PRICE_1_ = 'kousotsuPrice1'
+KOUSOTSU_PRICE_2_ = 'kousotsuPrice2'
+KOUSOTSU_PRICE_3_ = 'kousotsuPrice3'
+OPERATOR_ = 'Operator'
+KOUSOTSU_HH_ = 'kousotsuHH'
+KOUSOTSU_LL_ = 'kousotsuLL'
+LONG_ENTRY_POINT_ = 'EntryPointLong'
+SHORT_ENTRY_POINT_ = 'EntryPointShort'
+CALC_TIME_ = 'calcTime'
+
+# テクニカルで追加されるカラム名
+CHANGE_RATE_ = 'ChangeRate'
+CHANGE_RATE_MAX_10DAYS_ = 'ChangeRateMax10days'
+UP_RATE_ = 'UpRate'
+DOWN_RATE_ = 'DownRate'
+EMA_200_ = 'EMA200'
+EMA_100_ = 'EMA100'
+EMA_50_ = 'EMA50'
+RSI_56_ = 'RSI56'
+FRIEND_RATE_UP_ ='FriendRateUp'
+FRIEND_RATE_DOWN_ ='FriendRateDown'
