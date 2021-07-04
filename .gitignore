@@ -137,5 +137,5 @@ redis/
 # for Mac
 .DS_Store
 
-# laravel
-php/web/vendor/
+.ssh/
+.vscode-server/
