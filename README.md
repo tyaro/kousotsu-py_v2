@@ -14,7 +14,7 @@ cd kousotsu-py_v2
 
 /bin/sh setup.sh
 ```
-### ◆2021/06/22進捗
+### ◆2021/07/04進捗
 - Cron処理追加
  - 変動率計算処理追加
 - REST API追加
