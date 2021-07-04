@@ -35,4 +35,4 @@ sleep 30
 echo "DB初期データを取得します。"
 docker exec -it python3 /bin/sh -c '/bin/bash /root/opt/setup.sh'
 
-docker exec -it restapi /bin/bash -c 'uvicorn main:app --reload --host 0.0.0.0 --port 80'
+docker exec -it -d restapi /bin/bash -c 'uvicorn main:app --reload --host 0.0.0.0 --port 80'
