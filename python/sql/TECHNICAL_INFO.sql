@@ -1,0 +1,27 @@
+CREATE TABLE TECHNICAL_INFOS(
+    pair VARCHAR(20) NOT NULL,
+    calcTime DATETIME NOT NULL,
+    price double,
+    EMA200 double,
+    EMA100 double,
+    EMA50 double,
+    EMA200BTC double,
+    EMA_S_1D double,
+    EMA_S_4H double,
+    EMA_S_1H double,
+    EMA_M_1D double,
+    EMA_M_4H double,
+    EMA_M_1H double,
+    DREMA200 double,
+    DREMA100 double,
+    DREMA50 double,
+    DREMA200BTC double,
+    RSI14_1D double,
+    RSI14_4H double,
+    RSI14_1H double,
+    BTCFRUp double,
+    BTCFRDown double,
+    ChangeRate double,
+
+    PRIMARY KEY(pair,calcTime)
+)

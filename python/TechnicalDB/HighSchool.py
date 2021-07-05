@@ -187,7 +187,6 @@ class HighSchool():
         return s,spoint,lpoint
 
 def main():
-    client = redis.Redis(host='redis',port=6379,db=0)
 
     # シンボルリストをDBから取得
     symbolList = session.query(BINANCE_SYMBOL_MASTER.symbol,BINANCE_SYMBOL_MASTER.point)

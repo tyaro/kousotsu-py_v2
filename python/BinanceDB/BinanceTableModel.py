@@ -78,6 +78,13 @@ class BINANCE_TICKER_INFO_SPOT_MODEL(Base):
     tickerTime = Column('tickerTime', DateTime,primary_key=True)
     price = Column('price', Float)
 
+#TICKER モデル
+class BINANCE_TICKER_INFO_SPOT_BTC_MODEL(Base):
+    __tablename__ = 'BINANCE_TICKER_INFO_SPOT_BTC'
+    symbol = Column('symbol', String(20),primary_key=True)
+    tickerTime = Column('tickerTime', DateTime,primary_key=True)
+    price = Column('price', Float)
+
 #通貨ペアマスタ
 class BINANCE_SYMBOL_MASTER(Base):
     __tablename__ = 'BINANCE_SYMBOL_MASTER'
@@ -91,6 +98,8 @@ class BINANCE_SYMBOL_MASTER_SPOT(Base):
     symbol = Column('symbol', String(20),primary_key = True)
     point = Column('point', Integer)
     updatetime = Column('updatetime',DateTime)    
+
+
 
 def main(args):
     Base.metadata.create_all(bind=ENGINE)

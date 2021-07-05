@@ -35,23 +35,22 @@ def KousotsuMethod2db(calcList,tablename):
             kousotsuPrice1=%s,kousotsuPrice2=%s,kousotsuPrice3=%s,EntryPointLong=%s,EntryPointShort=%s'
 
     for row in calcList:
-        for k in row.keys():
-            query1 = query % (
-                tablename,
-                row['pair'],
-                row[CALC_TIME_],
-                row[KOUSOTSU_PRICE_1_],
-                row[KOUSOTSU_PRICE_2_],
-                row[KOUSOTSU_PRICE_3_],
-                row[LONG_ENTRY_POINT_],
-                row[SHORT_ENTRY_POINT_],
-                row[KOUSOTSU_PRICE_1_],
-                row[KOUSOTSU_PRICE_2_],
-                row[KOUSOTSU_PRICE_3_],
-                row[LONG_ENTRY_POINT_],
-                row[SHORT_ENTRY_POINT_])
+        query1 = query % (
+            tablename,
+            row['pair'],
+            row[CALC_TIME_],
+            row[KOUSOTSU_PRICE_1_],
+            row[KOUSOTSU_PRICE_2_],
+            row[KOUSOTSU_PRICE_3_],
+            row[LONG_ENTRY_POINT_],
+            row[SHORT_ENTRY_POINT_],
+            row[KOUSOTSU_PRICE_1_],
+            row[KOUSOTSU_PRICE_2_],
+            row[KOUSOTSU_PRICE_3_],
+            row[LONG_ENTRY_POINT_],
+            row[SHORT_ENTRY_POINT_])
 
-            ENGINE.execute(query1)
+        ENGINE.execute(query1)
     
     return
 
@@ -62,7 +61,49 @@ def GetViewData(viewName):
     df = pd.read_sql_query(query1,con=ENGINE)
     return df
 
+def TechnicalInfo2db(calcList,tablename):
 
+    if not calcList:
+        return
+    
+    query = 'INSERT INTO %s \
+            (pair,calctime,price,EMA200,EMA100,EMA50,EMA200BTC,\
+            EMA_S_1D,EMA_S_4H,EMA_S_1H,EMA_M_1D,EMA_M_4H,EMA_M_1H,\
+            DREMA200,DREMA100,DREMA50,DREMA200BTC,RSI14_1D,RSI14_4H,RSI14_1H,\
+            BTCFRUp,BTCFRDown,ChangeRate) \
+            VALUES("%s","%s",%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s,%s) '
+
+    for row in calcList:
+        query1 = query % (
+            tablename,
+            row['pair'],
+            row['calcTime'],
+            row['price'],
+            row['EMA200'],
+            row['EMA100'],
+            row['EMA50'],
+            row['EMA200BTC'],
+            row['EMA_S_1D'],
+            row['EMA_S_4H'],
+            row['EMA_S_1H'],
+            row['EMA_M_1D'],
+            row['EMA_M_4H'],
+            row['EMA_M_1H'],
+            row['DREMA200'],
+            row['DREMA100'],
+            row['DREMA50'],
+            row['DREMA200BTC'],
+            row['RSI14_1D'],
+            row['RSI14_4H'],
+            row['RSI14_1H'],
+            row['BTCFRUp'],
+            row['BTCFRDown'],
+            row['ChangeRate'],
+            )
+
+        ENGINE.execute(query1)
+    
+    return
 
 def main():
     '''

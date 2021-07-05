@@ -15,7 +15,7 @@ def getKlinesData(symbolList):
         print(pair,btcPair,"のローソク足データ(1日足)を取得してDBに登録します")
         # バイナンスから10日分のローソク足を取得
         df = BinanceAPI.GetKlinesF(pair,10,'1d')
-        dfBTC = BinanceAPI.GetKlinesF(btcPair,10,'1d')
+        dfBTC = BinanceAPI.GetKlinesS(btcPair,10,'1d')
         # 銘柄情報を追加
         df[SYMBOL_] = pair
         dfBTC[SYMBOL_] = btcPair
