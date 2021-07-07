@@ -186,6 +186,9 @@ class HighSchool():
                     
         return s,spoint,lpoint
 
+
+
+
 def main():
 
     # シンボルリストをDBから取得
@@ -207,6 +210,24 @@ def main():
         df = HighSchool.CalcEntryPoint(df)
         df = df.fillna(0)
 
+        KousotsuHH = df.iloc[-1][KOUSOTSU_HH_]
+        KousotsuLL = df.iloc[-1][KOUSOTSU_LL_]
+
+        if KousotsuHH == -1:
+          hh = "↘"
+        elif KousotsuHH == 0:
+          hh = "→"
+        else:
+          hh = "↘"
+        if KousotsuLL == -1:
+          ll = "↘"
+        elif KousotsuLL == 0:
+          ll = "→"
+        else:
+          ll = "↘"
+        
+        transition = hh+ll
+
         data = {
             "pair":pair,
             "calcTime":df.iloc[-1][OPEN_TIME_],
@@ -215,6 +236,7 @@ def main():
             "kousotsuPrice3":round(df.iloc[-1][KOUSOTSU_PRICE_3_],point),
             "EntryPointLong":round(df.iloc[-1][LONG_ENTRY_POINT_],point),
             "EntryPointShort":round(df.iloc[-1][SHORT_ENTRY_POINT_],point),
+            "TREND":transition,
         }
         calcList.append(data)
     '''
@@ -223,15 +245,7 @@ def main():
     '''
 
     KousotsuMethod2db(calcList,'KOUSOTSU_METHOD')
-    #j =  json.dumps(calcList,ensure_ascii=False)
 
-    #print(j)
-    '''
-    key = 'kousotsu'
-    value = GetChangeRate('BINANCE_TICKER_INFO')
-    print(value)
-    client.set(key,value)
-    '''
 
 if __name__ == "__main__":
     main()

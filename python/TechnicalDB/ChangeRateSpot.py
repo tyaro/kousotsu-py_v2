@@ -90,7 +90,7 @@ def GetChangeRate(tablename):
 
 
 def main():
-    client = redis.Redis(host='redis',port=6379,db=0)
+    client = redis.Redis(host='localhost',port=26379,db=0)
 
     key = 'ChangeRateSpot'
     value = GetChangeRate('BINANCE_TICKER_INFO_SPOT')

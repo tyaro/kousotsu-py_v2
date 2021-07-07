@@ -14,7 +14,8 @@ class KOUSOTSU_METHOD_MODEL(Base):
     kousotsuPrice3 = Column('kousotsuPrice3', Float)
     EntryPointLong = Column('EntryPointLong', Float)
     EntryPointShort = Column('EntryPointShort', Float)
-
+    TREND = Column('TREND', String(10))
+    
 
 
 def main(args):

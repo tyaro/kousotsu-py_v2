@@ -29,10 +29,10 @@ def KousotsuMethod2db(calcList,tablename):
         return
     
     query = 'INSERT INTO %s \
-            (pair,calctime,kousotsuPrice1,kousotsuPrice2,kousotsuPrice3,EntryPointLong,EntryPointShort) \
-            VALUES("%s","%s",%s,%s,%s,%s,%s) \
+            (pair,calctime,kousotsuPrice1,kousotsuPrice2,kousotsuPrice3,EntryPointLong,EntryPointShort,TREND) \
+            VALUES("%s","%s",%s,%s,%s,%s,%s,"%s") \
             ON DUPLICATE KEY UPDATE \
-            kousotsuPrice1=%s,kousotsuPrice2=%s,kousotsuPrice3=%s,EntryPointLong=%s,EntryPointShort=%s'
+            kousotsuPrice1=%s,kousotsuPrice2=%s,kousotsuPrice3=%s,EntryPointLong=%s,EntryPointShort=%s,TREND="%s"'
 
     for row in calcList:
         query1 = query % (
@@ -44,11 +44,13 @@ def KousotsuMethod2db(calcList,tablename):
             row[KOUSOTSU_PRICE_3_],
             row[LONG_ENTRY_POINT_],
             row[SHORT_ENTRY_POINT_],
+            row[TREND_],
             row[KOUSOTSU_PRICE_1_],
             row[KOUSOTSU_PRICE_2_],
             row[KOUSOTSU_PRICE_3_],
             row[LONG_ENTRY_POINT_],
-            row[SHORT_ENTRY_POINT_])
+            row[SHORT_ENTRY_POINT_],
+            row[TREND_])
 
         ENGINE.execute(query1)
     
