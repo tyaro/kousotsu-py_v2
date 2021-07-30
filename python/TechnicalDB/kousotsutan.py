@@ -19,14 +19,14 @@ def Judgement(df):
     df[JUDGEMENT_] = ""
 
     # ショート推奨価格を上回っているか
-    df.loc[df[PRICE_] - df[SHORT_ENTRY_POINT_] > 0,SP_] = 1  
+    df.loc[df[PRICE_] > df[SHORT_ENTRY_POINT_],SP_] = 1  
     # ロング推奨価格を下回っているか
-    df.loc[df[PRICE_] - df[LONG_ENTRY_POINT_] < 0,LP_] = 1  
+    df.loc[df[PRICE_] < df[LONG_ENTRY_POINT_],LP_] = 1  
 
     # ショートの場合RSI14が60を下回っていたら星追加
-    df.loc[(df[SP_] > 0) & (df['RSI14_1D'] < 60),SP_] = 2  
+    df.loc[(df[SP_] > 0) & (df['RSI14_4H'] < 60),SP_] = 2  
     # ロングの場合RSI14が40を上回っていたら星追加
-    df.loc[(df[LP_] > 0) & (df['RSI14_1D'] > 40),SP_] = 2  
+    df.loc[(df[LP_] > 0) & (df['RSI14_4H'] > 40),LP_] = 2  
 
     # EMAの条件 ショートの場合EMA200とBTC建てEMA200を下回っているかどうか判断
     df.loc[(df[SP_] > 1) & (df['DREMA200'] < 0) & (df['DREMA200BTC'] < 0),SP_] = 3
@@ -117,7 +117,7 @@ def kousotsutan():
             'DREMA100':d[row]['DREMA100'],
             'DREMA50':d[row]['DREMA50'],
             'DREMA200BTC':d[row]['DREMA200BTC'],
-            'RSI14_1D':d[row]['RSI14_1D'],
+            'RSI14_1D':d[row]['RSI14_4H'],
             'BTCFRUp':d[row]['BTCFRUp'],
             'BTCFRDown':d[row]['BTCFRDown'],
             'ChangeRate':d[row]['ChangeRate'],
@@ -133,7 +133,7 @@ def kousotsutan():
     return json.dumps(calcList,ensure_ascii=False)
 
 def main():
-    client = redis.Redis(host='redis',port=6379,db=0)
+    client = redis.Redis(host='localhost',port=26379,db=0)
 
     key = 'kousotsutan'
     value = kousotsutan()

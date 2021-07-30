@@ -84,12 +84,20 @@ class Technical:
         df[colName] = (df[CLOSE_]/df[OPEN_] * 100) - 100
         return df
 
-    # 7日間の変動率(絶対値)のMAX
+    # 10日間の変動率(絶対値)のMAX
     # colChangeRate:変動率が入っている列名
     # colname:格納する列名
     @staticmethod 
     def CalcMaxChangeRate10(df,colChangeRate,colName):
         df[colName] = df[colChangeRate].abs().rolling(window=10,center=False).max()
+        #l = [df['openTime'],df[colChangeRate],df[colName]]
+        #print(l)
+        return df
+
+    @staticmethod 
+    def CalcMaxMinChangeRate10(df,colChangeRate,colNameMax,colNameMin):
+        df[colNameMax] = df[colChangeRate].rolling(window=10,center=False).max()
+        df[colNameMin] = df[colChangeRate].rolling(window=10,center=False).min()
         #l = [df['openTime'],df[colChangeRate],df[colName]]
         #print(l)
         return df

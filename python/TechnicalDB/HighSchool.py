@@ -92,18 +92,24 @@ class HighSchool():
  
         # 適正価格演算
         # 2021/06/20 23時変更
-        #df[KOUSOTSU_PRICE_0_] = df[OPEN_] + (df[PRE_GAIN_VALUE_].abs() * df[OPERATOR_])
-        df[KOUSOTSU_PRICE_0_] = df[CLOSE_] + (df[PRE_GAIN_VALUE_].abs() * df[OPERATOR_])
+        # 2021/07/29 再度変更 終値⇒始値
+        df[KOUSOTSU_PRICE_0_] = df[OPEN_] + (df[PRE_GAIN_VALUE_].abs() * df[OPERATOR_])
+        # 2021/07/29 変更
+        #df[KOUSOTSU_PRICE_0_] = df[CLOSE_] + (df[PRE_GAIN_VALUE_].abs() * df[OPERATOR_])
 
         # 2日前の行にデータが入っているのでデータをずらす
         df[KOUSOTSU_PRICE_1_] = df[KOUSOTSU_PRICE_0_].shift(2) # 今日の朝9時の適正価格
         df[KOUSOTSU_PRICE_2_] = df[KOUSOTSU_PRICE_0_].shift(1) # 明日の朝9時の適正価格
         df[KOUSOTSU_PRICE_3_] = df[KOUSOTSU_PRICE_0_]          # 明後日の朝9時の適正価格
 
+        df[KOUSOTSU_HH_PRE_] = df[KOUSOTSU_HH_]#.shift(2)
+        df[KOUSOTSU_LL_PRE_] = df[KOUSOTSU_LL_]#.shift(2)
         df[KOUSOTSU_HH_] = df[KOUSOTSU_HH_].shift(2)
         df[KOUSOTSU_LL_] = df[KOUSOTSU_LL_].shift(2)
+        df[KOUSOTSU_HH_PRE_] = df[KOUSOTSU_HH_PRE_].shift(4)
+        df[KOUSOTSU_LL_PRE_] = df[KOUSOTSU_LL_PRE_].shift(4)
 
-        #print(df.loc[:,[OPEN_TIME_,HIGH_,PRE_HIGH_,LOW_,PRE_LOW_,KOUSOTSU_TREND_]])
+        #print(df.loc[:,[OPEN_TIME_,HIGH_,PRE_HIGH_,LOW_,PRE_LOW_,KOUSOTSU_HH_,KOUSOTSU_LL_,KOUSOTSU_HH_PRE_,KOUSOTSU_LL_PRE_]])
 
         return df
 
@@ -113,11 +119,14 @@ class HighSchool():
         df = Technical.CalcChangeRate(df,CHANGE_RATE_)
 
         # 10日間の最大変動計算(絶対値)
-        df = Technical.CalcMaxChangeRate10(df,CHANGE_RATE_,CHANGE_RATE_MAX_10DAYS_)
+        #df = Technical.CalcMaxChangeRate10(df,CHANGE_RATE_,CHANGE_RATE_MAX_10DAYS_)
+        df = Technical.CalcMaxMinChangeRate10(df,CHANGE_RATE_,CHANGE_RATE_MAX_10DAYS_,CHANGE_RATE_MIN_10DAYS_)
 
         # ロングエントリーポイント算出 (1 - 7日間の最大変動率/100)✕適正価格
-        df[LONG_ENTRY_POINT_] = (1 - df[CHANGE_RATE_MAX_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
+        #df[LONG_ENTRY_POINT_] = (1 - df[CHANGE_RATE_MAX_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
+        df[LONG_ENTRY_POINT_] = (1 + df[CHANGE_RATE_MIN_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
         # ショートエントリーポイント算出 (1 - 7日間の最大変動率/100)✕適正価格
+        #df[SHORT_ENTRY_POINT_] = (1 + df[CHANGE_RATE_MAX_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
         df[SHORT_ENTRY_POINT_] = (1 + df[CHANGE_RATE_MAX_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
         
         return df
@@ -212,21 +221,36 @@ def main():
 
         KousotsuHH = df.iloc[-1][KOUSOTSU_HH_]
         KousotsuLL = df.iloc[-1][KOUSOTSU_LL_]
+        KousotsuHH2 = df.iloc[-1][KOUSOTSU_HH_PRE_]
+        KousotsuLL2 = df.iloc[-1][KOUSOTSU_HH_PRE_]
 
         if KousotsuHH == -1:
           hh = "↘"
         elif KousotsuHH == 0:
           hh = "→"
         else:
-          hh = "↘"
+          hh = "↗"
         if KousotsuLL == -1:
           ll = "↘"
         elif KousotsuLL == 0:
           ll = "→"
         else:
-          ll = "↘"
+          ll = "↗"
         
-        transition = hh+ll
+        if KousotsuHH2 == -1:
+          hh2 = "↘"
+        elif KousotsuHH2 == 0:
+          hh2 = "→"
+        else:
+          hh2 = "↗"
+        if KousotsuLL2 == -1:
+          ll2 = "↘"
+        elif KousotsuLL2 == 0:
+          ll2 = "→"
+        else:
+          ll2 = "↗"
+
+        transition = hh+ll+'('+hh2+ll2+')'
 
         data = {
             "pair":pair,
