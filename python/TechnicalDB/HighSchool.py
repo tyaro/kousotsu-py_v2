@@ -121,14 +121,28 @@ class HighSchool():
         # 10日間の最大変動計算(絶対値)
         #df = Technical.CalcMaxChangeRate10(df,CHANGE_RATE_,CHANGE_RATE_MAX_10DAYS_)
         df = Technical.CalcMaxMinChangeRate10(df,CHANGE_RATE_,CHANGE_RATE_MAX_10DAYS_,CHANGE_RATE_MIN_10DAYS_)
+        dfUp = df[df[CHANGE_RATE_]>0]
+        dfDown = df[df[CHANGE_RATE_]<0]
 
+        dfUp = dfUp[:-1]
+        dfDown = dfDown[:-1]
+        
+        dfUpMax = dfUp[CHANGE_RATE_].rolling(window=10,center=False).max().fillna(0)
+        dfDownMax = dfDown[CHANGE_RATE_].rolling(window=10,center=False).min().fillna(0)
+
+        UpMax = dfUpMax.iloc[-1]
+        DownMax = dfDownMax.iloc[-1]
+        df['UpMax'] = UpMax
+        df['DownMax'] = DownMax
         # ロングエントリーポイント算出 (1 - 7日間の最大変動率/100)✕適正価格
         #df[LONG_ENTRY_POINT_] = (1 - df[CHANGE_RATE_MAX_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
-        df[LONG_ENTRY_POINT_] = (1 + df[CHANGE_RATE_MIN_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
+        #df[LONG_ENTRY_POINT_] = (1 + df[CHANGE_RATE_MIN_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
+        df[LONG_ENTRY_POINT_] = (1 + DownMax/100)*df[KOUSOTSU_PRICE_1_]
         # ショートエントリーポイント算出 (1 - 7日間の最大変動率/100)✕適正価格
         #df[SHORT_ENTRY_POINT_] = (1 + df[CHANGE_RATE_MAX_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
-        df[SHORT_ENTRY_POINT_] = (1 + df[CHANGE_RATE_MAX_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
-        
+        #df[SHORT_ENTRY_POINT_] = (1 + df[CHANGE_RATE_MAX_10DAYS_]/100)*df[KOUSOTSU_PRICE_1_]
+        df[SHORT_ENTRY_POINT_] = (1 + UpMax/100)*df[KOUSOTSU_PRICE_1_]
+        #print(df)        
         return df
 
     # 735氏に感謝
@@ -212,7 +226,7 @@ def main():
         pair = symbol[0]
         point = symbol[1]
 
-        df = GetKlinesData('BINANCE_KLINES_1DAY',pair,20)
+        df = GetKlinesData('BINANCE_KLINES_1DAY',pair,40)
         price = GetTicker('BINANCE_TICKER_INFO',pair)
 
         df = HighSchool.CalcReasonablePriceDayBase(df,price)
@@ -263,6 +277,8 @@ def main():
             "TREND":transition,
         }
         calcList.append(data)
+        #if pair == "KAVAUSDT":
+        #    break
     '''
     for row in calcList:
         print(row)

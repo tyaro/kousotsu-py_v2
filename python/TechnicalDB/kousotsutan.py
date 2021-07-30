@@ -133,7 +133,7 @@ def kousotsutan():
     return json.dumps(calcList,ensure_ascii=False)
 
 def main():
-    client = redis.Redis(host='localhost',port=26379,db=0)
+    client = redis.Redis(host='redis',port=6379,db=0)
 
     key = 'kousotsutan'
     value = kousotsutan()
