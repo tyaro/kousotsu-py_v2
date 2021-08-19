@@ -27,6 +27,7 @@ class BINANCE_KLINES_1DAY_BTC_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #ローソク足モデル
 class BINANCE_KLINES_4HOUR_MODEL(Base):
@@ -39,6 +40,7 @@ class BINANCE_KLINES_4HOUR_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #ローソク足モデル
 class BINANCE_KLINES_1HOUR_MODEL(Base):
@@ -51,6 +53,7 @@ class BINANCE_KLINES_1HOUR_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #ローソク足モデル
 class BINANCE_KLINES_1MIN_MODEL(Base):
@@ -63,6 +66,7 @@ class BINANCE_KLINES_1MIN_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #TICKER モデル
 class BINANCE_TICKER_INFO_MODEL(Base):
@@ -88,6 +92,13 @@ class BINANCE_SYMBOL_MASTER(Base):
 #通貨ペアマスタ
 class BINANCE_SYMBOL_MASTER_SPOT(Base):
     __tablename__ = 'BINANCE_SYMBOL_MASTER_SPOT'
+    symbol = Column('symbol', String(20),primary_key = True)
+    point = Column('point', Integer)
+    updatetime = Column('updatetime',DateTime)    
+
+#通貨ペアマスタ
+class BINANCE_SYMBOL_MASTER_SPOT_BTC(Base):
+    __tablename__ = 'BINANCE_SYMBOL_MASTER_SPOT_BTC'
     symbol = Column('symbol', String(20),primary_key = True)
     point = Column('point', Integer)
     updatetime = Column('updatetime',DateTime)    

@@ -202,7 +202,8 @@ def main():
         dfDays = GetKlinesData('BINANCE_KLINES_1DAY',pair,500)
         dfDaysBTC = GetKlinesData('BINANCE_KLINES_1DAY_BTC',btcPair,500)
         df1Hour = GetKlinesData('BINANCE_KLINES_1HOUR',pair,100)
-        df4Hour = GetKlinesData('BINANCE_KLINES_4HOUR',pair,100)
+        #df4Hour = GetKlinesData('BINANCE_KLINES_4HOUR',pair,100)
+        df4Hour = GetKlinesData('BINANCE_KLINES_6HOUR',pair,100)
 
         # 最終値を現在値に置き換え
         dfDays.Close.iloc[-1] = lastPrice

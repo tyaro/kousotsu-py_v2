@@ -12,16 +12,16 @@ def klinesData2db(df,tablename):
         return
 
     # SQL 重複はアップデート
-    query = 'INSERT INTO %s (symbol,openTime,open,close,high,low,coinVolume,usdtVolume) \
-            VALUES("%s","%s",%s,%s,%s,%s,%s,%s) \
+    query = 'INSERT INTO %s (symbol,openTime,open,close,high,low,coinVolume,usdtVolume,takerBuyUsdtVolume) \
+            VALUES("%s","%s",%s,%s,%s,%s,%s,%s,%s) \
             ON DUPLICATE KEY UPDATE \
-            open=%s,close=%s,high=%s,low=%s,coinVolume=%s,usdtVolume=%s'
+            open=%s,close=%s,high=%s,low=%s,coinVolume=%s,usdtVolume=%s,takerBuyUsdtVolume=%s'
 
     # ローソク足をDBに登録
     for _,row in df.iterrows():
         query1 = query % (tablename,
-           row[SYMBOL_],row[OPEN_TIME_],row[OPEN_],row[CLOSE_],row[HIGH_],row[LOW_],row[VOLUME_],row[QUOTE_ASSET_VOLUME_],
-            row[OPEN_],row[CLOSE_],row[HIGH_],row[LOW_],row[VOLUME_],row[QUOTE_ASSET_VOLUME_]
+           row[SYMBOL_],row[OPEN_TIME_],row[OPEN_],row[CLOSE_],row[HIGH_],row[LOW_],row[VOLUME_],row[QUOTE_ASSET_VOLUME_],row[TAKER_BUY_QUOTE_ASSET_VOLUME_],
+            row[OPEN_],row[CLOSE_],row[HIGH_],row[LOW_],row[VOLUME_],row[QUOTE_ASSET_VOLUME_],row[TAKER_BUY_QUOTE_ASSET_VOLUME_]
             )
         ENGINE.execute(query1)
 
@@ -50,14 +50,14 @@ def TickerInfo2db(df,tablename):
 # TickerデータをDBへ登録
 def DeleteTickerInfo(tablename):
     
-    delDatetime = datetime.datetime.now() + datetime.timedelta(hours=-24)
+    delDatetime = datetime.datetime.now() + datetime.timedelta(hours=-48)
     #delDatetime = datetime.datetime.now() + datetime.timedelta(minutes=-3)
 
     query = 'DELETE FROM %s WHERE tickerTime <= "%s"'
 
     # TICKER INFOをDBに登録
     query1 = query % (tablename,delDatetime)
-    print("3時間前のデータを削除します",query1)
+    print("48時間前のデータを削除します",query1)
     ENGINE.execute(query1)
 
     return

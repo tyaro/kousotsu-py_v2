@@ -90,11 +90,14 @@ def GetChangeRate(tablename):
 
 
 def main():
-    client = redis.Redis(host='localhost',port=26379,db=0)
+    #本番環境
+    #client = redis.Redis(host='localhost',port=26379,db=0)
+    #DEBUG環境
+    client = redis.Redis(host='redis',port=6379,db=0)
 
     key = 'ChangeRate'
     value = GetChangeRate('BINANCE_TICKER_INFO')
-    print(value)
+    #print(value)
     client.set(key,value)
 
 if __name__ == "__main__":

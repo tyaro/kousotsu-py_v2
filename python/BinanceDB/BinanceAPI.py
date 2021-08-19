@@ -70,7 +70,7 @@ class BinanceAPI:
         df = df.drop(columns=CLOSE_TIME_)
         df = df.drop(columns=NUMBER_OF_TRADES_)
         df = df.drop(columns=TAKER_BUY_BASE_ASSET_VOLUME_)
-        df = df.drop(columns=TAKER_BUY_QUOTE_ASSET_VOLUME_)
+        #df = df.drop(columns=TAKER_BUY_QUOTE_ASSET_VOLUME_)
         df = df.drop(columns=IGNORE_)
 
         return df

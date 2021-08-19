@@ -141,7 +141,7 @@ def getBtcRSI(client):
 def main():
     client = redis.Redis(host='redis',port=6379,db=0)
     btcRSI = float(getBtcRSI(client))
-    key = 'kousotsutan'
+    key = 'KST_INFO'
     value = kousotsutan(btcRSI)
     client.set(key,value)
 

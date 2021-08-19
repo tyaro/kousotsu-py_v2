@@ -121,11 +121,12 @@ class HighSchool():
         # 10日間の最大変動計算(絶対値)
         #df = Technical.CalcMaxChangeRate10(df,CHANGE_RATE_,CHANGE_RATE_MAX_10DAYS_)
         df = Technical.CalcMaxMinChangeRate10(df,CHANGE_RATE_,CHANGE_RATE_MAX_10DAYS_,CHANGE_RATE_MIN_10DAYS_)
-        dfUp = df[df[CHANGE_RATE_]>0]
-        dfDown = df[df[CHANGE_RATE_]<0]
+        dfTemp = df[:-1]
+        dfUp = dfTemp[dfTemp[CHANGE_RATE_]>0]
+        dfDown = dfTemp[dfTemp[CHANGE_RATE_]<0]
 
-        dfUp = dfUp[:-1]
-        dfDown = dfDown[:-1]
+        #dfUp = dfUp[:-1]
+        #dfDown = dfDown[:-1]
         
         dfUpMax = dfUp[CHANGE_RATE_].rolling(window=10,center=False).max().fillna(0)
         dfDownMax = dfDown[CHANGE_RATE_].rolling(window=10,center=False).min().fillna(0)
@@ -226,7 +227,7 @@ def main():
         pair = symbol[0]
         point = symbol[1]
 
-        df = GetKlinesData('BINANCE_KLINES_1DAY',pair,40)
+        df = GetKlinesData('BINANCE_KLINES_1DAY',pair,60)
         price = GetTicker('BINANCE_TICKER_INFO',pair)
 
         df = HighSchool.CalcReasonablePriceDayBase(df,price)

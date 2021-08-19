@@ -10,6 +10,7 @@ import json
 def GetChangeRate(tablename):
 
     #定義
+    PRICE_001MIN_AGO = 'Price001minAgo'
     PRICE_005MIN_AGO = 'Price005minAgo'
     PRICE_010MIN_AGO = 'Price010minAgo'
     PRICE_030MIN_AGO = 'Price030minAgo'
@@ -20,6 +21,7 @@ def GetChangeRate(tablename):
     PRICE_480MIN_AGO = 'Price480minAgo'
     PRICE_720MIN_AGO = 'Price720minAgo'
 
+    CHANGE_RATE_001 = 'ChangeRate1'
     CHANGE_RATE_005 = 'ChangeRate5'
     CHANGE_RATE_010 = 'ChangeRate10'
     CHANGE_RATE_030 = 'ChangeRate30'
@@ -33,7 +35,7 @@ def GetChangeRate(tablename):
 
     print("変動率を計算します")
     # シンボルリストをDBから取得
-    symbolList = session.query(BINANCE_SYMBOL_MASTER_SPOT.symbol,BINANCE_SYMBOL_MASTER_SPOT.point)
+    symbolList = session.query(BINANCE_SYMBOL_MASTER_SPOT_BTC.symbol,BINANCE_SYMBOL_MASTER_SPOT_BTC.point)
 
     # 変動率のリストを作成
     changeRateList = []
@@ -45,6 +47,7 @@ def GetChangeRate(tablename):
         query = 'select * from %s where symbol = "%s" order by tickerTime desc limit 721'
         query1 = query % (tablename,pair)
         df = pd.read_sql_query(con=ENGINE,sql=query1)
+        df[PRICE_001MIN_AGO] = df[PRICE_].shift(-1)
         df[PRICE_005MIN_AGO] = df[PRICE_].shift(-5)
         df[PRICE_010MIN_AGO] = df[PRICE_].shift(-10)
         df[PRICE_030MIN_AGO] = df[PRICE_].shift(-30)
@@ -55,6 +58,7 @@ def GetChangeRate(tablename):
         df[PRICE_480MIN_AGO] = df[PRICE_].shift(-480)
         df[PRICE_720MIN_AGO] = df[PRICE_].shift(-720)
 
+        df[CHANGE_RATE_001] = df[PRICE_]/df[PRICE_001MIN_AGO]*100-100
         df[CHANGE_RATE_005] = df[PRICE_]/df[PRICE_005MIN_AGO]*100-100
         df[CHANGE_RATE_010] = df[PRICE_]/df[PRICE_010MIN_AGO]*100-100
         df[CHANGE_RATE_030] = df[PRICE_]/df[PRICE_030MIN_AGO]*100-100
@@ -68,10 +72,15 @@ def GetChangeRate(tablename):
         df[TICKER_TIME_] = df[TICKER_TIME_].astype(str)
         df = df.fillna(0)
 
+        df[PRICE_] = df.price.map('{:.8f}'.format)
+
+        TREND_PRICE = df.price.tail(30).to_list()
+
         data = {
             "pair":pair,
             "point":point,
-            "price":str(round(df.iloc[0][PRICE_],point)),
+            "price":{'VALUE':df.iloc[0][PRICE_],'TREND':TREND_PRICE},
+            "CRate01":str(round(df.iloc[0][CHANGE_RATE_001],2)),
             "CRate05": str(round(df.iloc[0][CHANGE_RATE_005],2)),
             "CRate10":str(round(df.iloc[0][CHANGE_RATE_010],2)),
             "CRate30":str(round(df.iloc[0][CHANGE_RATE_030],2)),
@@ -98,8 +107,8 @@ def main():
     #DEBUG環境
     client = redis.Redis(host='redis',port=6379,db=0)
 
-    key = 'ChangeRateSpot'
-    value = GetChangeRate('BINANCE_TICKER_INFO_SPOT')
+    key = 'ChangeRateSpotBtc'
+    value = GetChangeRate('BINANCE_TICKER_INFO_SPOT_BTC')
     #print(value)
     client.set(key,value)
 

@@ -15,6 +15,7 @@ class BINANCE_KLINES_1DAY_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #ローソク足モデル
 class BINANCE_KLINES_1DAY_BTC_MODEL(Base):
@@ -27,6 +28,20 @@ class BINANCE_KLINES_1DAY_BTC_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
+
+#ローソク足モデル
+class BINANCE_KLINES_6HOUR_MODEL(Base):
+    __tablename__ = 'BINANCE_KLINES_6HOUR'
+    symbol = Column('symbol', String(20),primary_key=True)
+    openTIme = Column('openTime', DateTime,primary_key=True)
+    openPrice = Column('open', Float)
+    closePrice = Column('close', Float)
+    highPrice = Column('high', Float)
+    lowPrice = Column('low', Float)
+    coinVolume = Column('coinVolume', Float)
+    usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #ローソク足モデル
 class BINANCE_KLINES_4HOUR_MODEL(Base):
@@ -39,6 +54,7 @@ class BINANCE_KLINES_4HOUR_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #ローソク足モデル
 class BINANCE_KLINES_1HOUR_MODEL(Base):
@@ -51,6 +67,7 @@ class BINANCE_KLINES_1HOUR_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #ローソク足モデル
 class BINANCE_KLINES_1MIN_MODEL(Base):
@@ -63,6 +80,7 @@ class BINANCE_KLINES_1MIN_MODEL(Base):
     lowPrice = Column('low', Float)
     coinVolume = Column('coinVolume', Float)
     usdtVolume = Column('usdtVolume', Float)
+    takerBuyUsdtVolume = Column('takerBuyUsdtVolume', Float)
 
 #TICKER モデル
 class BINANCE_TICKER_INFO_MODEL(Base):
@@ -74,13 +92,6 @@ class BINANCE_TICKER_INFO_MODEL(Base):
 #TICKER モデル
 class BINANCE_TICKER_INFO_SPOT_MODEL(Base):
     __tablename__ = 'BINANCE_TICKER_INFO_SPOT'
-    symbol = Column('symbol', String(20),primary_key=True)
-    tickerTime = Column('tickerTime', DateTime,primary_key=True)
-    price = Column('price', Float)
-
-#TICKER モデル
-class BINANCE_TICKER_INFO_SPOT_BTC_MODEL(Base):
-    __tablename__ = 'BINANCE_TICKER_INFO_SPOT_BTC'
     symbol = Column('symbol', String(20),primary_key=True)
     tickerTime = Column('tickerTime', DateTime,primary_key=True)
     price = Column('price', Float)
@@ -98,8 +109,6 @@ class BINANCE_SYMBOL_MASTER_SPOT(Base):
     symbol = Column('symbol', String(20),primary_key = True)
     point = Column('point', Integer)
     updatetime = Column('updatetime',DateTime)    
-
-
 
 def main(args):
     Base.metadata.create_all(bind=ENGINE)
