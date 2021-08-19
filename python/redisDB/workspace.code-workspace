@@ -1,0 +1,13 @@
+{
+	"folders": [
+		{
+			"path": ".."
+		},
+		{
+			"path": "../../restapi"
+		}
+	],
+	"settings": {
+		"git.ignoreLimitWarning": true
+	}
+}
